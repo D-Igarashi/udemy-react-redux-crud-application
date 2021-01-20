@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { connect } from 'react-redux'
 import { Field, reduxForm } from 'redux-form'
 import { Link } from 'react-router-dom'
+import TextField from 'material-ui/TextField'
+import RaisedButton from 'material-ui/RaisedButton';
 
 import { postEvent } from '../actions'
 
@@ -13,10 +15,15 @@ class EventsNew extends Component {
 	renderField(field) {
 		const { input, label, type, meta: { touched, error } } = field
 		return (
-			<div>
-				<input {...input} placeholder={label} type={type} />
-				{touched && error && <span>{error}</span>}
-			</div>)
+			<TextField
+				hinttext={label}
+				floatingLabelText={label}
+				type={type}
+				errorText={touched && error}
+				{...input}
+				fullWidth={true}
+			/>
+		)
 	}
 
 	async onSubmit(values) {
@@ -26,14 +33,16 @@ class EventsNew extends Component {
 
 	render() {
 		const { handleSubmit, pristine, submitting, invalid } = this.props
+		const style = { margin: 12 }
 		return (
 			<form onSubmit={handleSubmit(this.onSubmit)}>
 				<div>
 					<Field label="Title" name="title" type="text" component={this.renderField}></Field>
 					<Field label="Body" name="body" type="text" component={this.renderField}></Field>
 				</div>
-				<input type="submit" value="Submit" disabled={pristine || submitting || invalid} />
-				<Link to="/" > Cansel</Link>
+				<RaisedButton label="Submit" type="submit" style={style} disabled={pristine || submitting || invalid} />
+				<RaisedButton label="Cancel" style={style} containerElement={<Link to="/" />} />
+
 			</form>
 		)
 	}
